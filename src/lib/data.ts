@@ -1,0 +1,84 @@
+import { createClient } from "@/lib/supabase/server";
+import type {
+  HeroContent,
+  Service,
+  AboutContent,
+  Testimonial,
+  Product,
+  ContactInfo,
+  Booking,
+} from "@/types/database";
+
+export async function getHeroContent(): Promise<HeroContent | null> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("hero_content")
+    .select("*")
+    .limit(1)
+    .single();
+  return data;
+}
+
+export async function getServices(): Promise<Service[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("services")
+    .select("*")
+    .order("display_order", { ascending: true });
+  return data ?? [];
+}
+
+export async function getAboutContent(): Promise<AboutContent | null> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("about_content")
+    .select("*")
+    .limit(1)
+    .single();
+  return data;
+}
+
+export async function getTestimonials(): Promise<Testimonial[]> {
+  const supabase = await createClient();
+  const { data } = await supabase.from("testimonials").select("*");
+  return data ?? [];
+}
+
+export async function getProducts(category?: string): Promise<Product[]> {
+  const supabase = await createClient();
+  let query = supabase.from("products").select("*").order("featured", { ascending: false });
+  if (category && category !== "All") {
+    query = query.eq("category", category);
+  }
+  const { data } = await query;
+  return data ?? [];
+}
+
+export async function getProduct(id: string): Promise<Product | null> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("products")
+    .select("*")
+    .eq("id", id)
+    .single();
+  return data;
+}
+
+export async function getContactInfo(): Promise<ContactInfo | null> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("contact_info")
+    .select("*")
+    .limit(1)
+    .single();
+  return data;
+}
+
+export async function getBookings(): Promise<Booking[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("bookings")
+    .select("*")
+    .order("created_at", { ascending: false });
+  return data ?? [];
+}
