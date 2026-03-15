@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import {
   ArrowRight, Clock, Tag, ChevronDown, ChevronUp,
   Droplets, Sun, Shield, Sparkles, Heart, Eye, Zap,
+  type LucideIcon,
 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -14,8 +15,8 @@ import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/animat
 import type { Service } from "@/types/database";
 import type { ServiceContent } from "@/lib/serviceContent";
 
-const ICON_MAP: Record<string, React.ElementType> = {
-  Droplets, Sun, Shield, Sparkles, Heart, Eye, Zap,
+const ICON_MAP: Record<string, LucideIcon> = {
+  Droplets, Sun, Shield, Sparkles, Heart, Eye, Zap, Clock,
 };
 
 interface ServiceDetailProps {

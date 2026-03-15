@@ -2,9 +2,12 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { getServiceBySlug, getServices } from "@/lib/data";
-import { SERVICE_CONTENT, toServiceSlug } from "@/lib/serviceContent";
+import { getServiceBySlug } from "@/lib/data";
+import { SERVICE_CONTENT } from "@/lib/serviceContent";
 import { ServiceDetail } from "./ServiceDetail";
+
+// Always render dynamically so cookies() is available for the Supabase client
+export const dynamic = "force-dynamic";
 
 interface ServicePageProps {
   params: Promise<{ slug: string }>;
@@ -19,15 +22,6 @@ export async function generateMetadata({ params }: ServicePageProps): Promise<Me
     title: `${service.name_en} | Zehra Glam`,
     description: content?.tagline.en ?? service.description_en,
   };
-}
-
-export async function generateStaticParams() {
-  try {
-    const services = await getServices();
-    return services.map((s) => ({ slug: toServiceSlug(s.name_en) }));
-  } catch {
-    return [];
-  }
 }
 
 export default async function ServicePage({ params }: ServicePageProps) {
