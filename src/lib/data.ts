@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { toServiceSlug } from "@/lib/serviceContent";
 import type {
   HeroContent,
   Service,
@@ -27,6 +28,11 @@ export async function getServices(): Promise<Service[]> {
     .select("*")
     .order("display_order", { ascending: true });
   return (data as Service[] | null) ?? [];
+}
+
+export async function getServiceBySlug(slug: string): Promise<Service | null> {
+  const services = await getServices();
+  return services.find((s) => toServiceSlug(s.name_en) === slug) ?? null;
 }
 
 export async function getAboutContent(): Promise<AboutContent | null> {

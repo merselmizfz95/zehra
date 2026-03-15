@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n/context";
 import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/animations/ScrollReveal";
 import { SERVICE_IMAGE_MAP } from "@/constants/images";
+import { SERVICE_CONTENT, toServiceSlug } from "@/lib/serviceContent";
 import type { Service } from "@/types/database";
 import { DEFAULT_SERVICES } from "@/constants/siteConfig";
 
@@ -48,11 +49,13 @@ export function ServicesSection({ services }: ServicesSectionProps) {
           {displayServices.map((service) => {
             const name = locale === "en" ? service.name_en : service.name_fr;
             const desc = locale === "en" ? service.description_en : service.description_fr;
-            const imageUrl = service.image_url || SERVICE_IMAGE_MAP[service.icon] || "";
+            const richContent = SERVICE_CONTENT[service.icon];
+            const imageUrl = service.image_url || richContent?.heroImage || SERVICE_IMAGE_MAP[service.icon] || "";
+            const slug = toServiceSlug(service.name_en);
 
             return (
               <StaggerItem key={service.id}>
-                <div className="group relative h-[420px] rounded-2xl overflow-hidden cursor-pointer">
+                <Link href={`/services/${slug}`} className="block group relative h-[420px] rounded-2xl overflow-hidden cursor-pointer">
                   <Image
                     src={imageUrl}
                     alt={name}
@@ -68,16 +71,12 @@ export function ServicesSection({ services }: ServicesSectionProps) {
                     <p className="text-sm text-white/70 leading-relaxed font-[family-name:var(--font-inter)] line-clamp-3 opacity-0 group-hover:opacity-100 transition-opacity duration-500 translate-y-2 group-hover:translate-y-0">
                       {desc}
                     </p>
-                    <Button
-                      render={<Link href="/booking" />}
-                      variant="link"
-                      className="mt-3 p-0 text-white/90 hover:text-white font-[family-name:var(--font-inter)] opacity-0 group-hover:opacity-100 transition-all duration-500"
-                    >
+                    <span className="mt-3 inline-flex items-center text-white/90 hover:text-white font-[family-name:var(--font-inter)] text-sm font-medium opacity-0 group-hover:opacity-100 transition-all duration-500">
                       {t.services.learnMore}
                       <ArrowRight className="ml-1 h-3 w-3" />
-                    </Button>
+                    </span>
                   </div>
-                </div>
+                </Link>
               </StaggerItem>
             );
           })}
